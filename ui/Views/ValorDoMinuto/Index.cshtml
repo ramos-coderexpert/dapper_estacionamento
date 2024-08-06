@@ -6,7 +6,7 @@
 
 <div class="text-center">
     <h1 class="display-4">Valor Do Minuto</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <a class="btn btn-primary" asp-area="" asp-controller="ValorDoMinuto" asp-action="Novo">Novo</a>
 </div>
 
 <div class="text-center">
@@ -16,6 +16,8 @@
                 <th>Id</th>
                 <th>Minutos</th>
                 <th>Valor</th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -24,7 +26,15 @@
                 <tr>
                     <td>@item.Id</td>
                     <td>@item.Minutos</td>
-                    <td>R$ @item.Valor</td>
+                    <td>R$ @item.Valor.ToString("N2", new System.Globalization.CultureInfo("pt-BR"))</td>
+                    <td>
+                        <a class="btn btn-warning" asp-controller="ValorDoMinuto" asp-action="Editar" asp-route-id="@item.Id">Editar</a>
+                    </td>
+                    <td>
+                        <form onsubmit="return confirm('Confirma?')" asp-controller="ValorDoMinuto" asp-action="Excluir" asp-route-id="@item.Id" method="post">
+                            <button type="submit" class="btn btn-danger">Excluir</button>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>
