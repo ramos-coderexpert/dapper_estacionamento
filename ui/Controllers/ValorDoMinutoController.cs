@@ -1,24 +1,24 @@
-using Dapper;
 using Dapper_estacionamento.Models;
+using Dapper_estacionamento.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace Dapper_estacionamento.Controllers;
 
 [Route("/valores")]
 public class ValorDoMinutoController : Controller
 {
-    private readonly IDbConnection _connection;
+    private readonly IRepository<ValorDoMinuto> _repository;
 
-    public ValorDoMinutoController(IDbConnection connection)
+    public ValorDoMinutoController(IRepository<ValorDoMinuto> repository)
     {
-        _connection = connection;
+        _repository = repository;
     }
 
     public IActionResult Index()
     {
-        var valores = _connection.Query<ValorDoMinuto>("SELECT * FROM valores");
+        var valores = _repository.ObterTodos();
 
+        return View(valores);
         // Executando Procedure, forma simples
         //var parameters = new DynamicParameters();
         //parameters.Add("@idCliente", 1);
@@ -46,8 +46,6 @@ public class ValorDoMinutoController : Controller
         //{
         //    return new TicketComCliente { Ticket = ticket, NomeCliente = nomeCliente };
         //}, splitOn: "NomeCliente");
-
-        return View(valores);
     }
 
     [HttpGet("novo")]
@@ -59,18 +57,14 @@ public class ValorDoMinutoController : Controller
     [HttpPost("criar")]
     public IActionResult Criar([FromForm] ValorDoMinuto valorDoMinuto)
     {
-        string sql = "INSERT INTO valores (Minutos, Valor) VALUES (@Minutos, @Valor)";
-        _connection.Execute(sql, new { Minutos = valorDoMinuto.Minutos, Valor = valorDoMinuto.Valor });
-
+        _repository.Inserir(valorDoMinuto);
         return Redirect("/valores");
     }
 
     [HttpGet("{id}/editar")]
     public IActionResult Editar([FromRoute] int id)
     {
-        string sql = "SELECT * FROM valores WHERE Id = @Id";
-        var valor = _connection.Query<ValorDoMinuto>(sql, new { Id = id }).FirstOrDefault();
-
+        var valor = _repository.ObterPorId(id);
         return View(valor);
     }
 
@@ -79,18 +73,14 @@ public class ValorDoMinutoController : Controller
     {
         valorDoMinuto.Id = id;
 
-        string sql = "UPDATE valores SET Minutos = @Minutos, Valor = @Valor WHERE Id = @Id";
-        _connection.Execute(sql, valorDoMinuto);
-
+        _repository.Atualizar(valorDoMinuto);
         return Redirect("/valores");
     }
 
     [HttpPost("{id}/excluir")]
     public IActionResult Excluir([FromRoute] int id)
     {
-        string sql = "DELETE FROM valores WHERE Id = @Id";
-        _connection.Execute(sql, new { Id = id });
-
+        _repository.Excluir(id);
         return Redirect("/valores");
     }
 }

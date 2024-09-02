@@ -1,8 +1,13 @@
-﻿namespace Dapper_estacionamento.Models
+﻿using Dapper_estacionamento.Repositories;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Dapper_estacionamento.Models
 {
+    [Table("clientes")]
     public class Cliente
     {
-        public int Id { get; set; }
+        [IgnoreInDapper]
+        public int Id { get; set; }        
         public string Nome { get; set; }
         public string Cpf { get; set; }
     }

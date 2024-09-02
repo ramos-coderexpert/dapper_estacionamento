@@ -1,3 +1,4 @@
+using Dapper_estacionamento.Repositories;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -9,6 +10,8 @@ builder.Services.AddControllersWithViews();
 // Configure the Dapper connection
 builder.Services.AddTransient<IDbConnection>(sp =>
     new SqlConnection(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 var app = builder.Build();
 
