@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Veiculo>
+
+@{
+    ViewData["Title"] = "Veiculos";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Veiculos</h1>
+    <a class="btn btn-primary" asp-area="" asp-controller="Veiculos" asp-action="Novo">Novo</a>
+</div>
+
+<div class="text-center">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>NomeCliente</th>
+                <th>Placa</th>
+                <th>Modelo</th>
+                <th>Marca</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Client.Nome</td>
+                    <td>@item.Placa</td>
+                    <td>@item.Modelo</td>
+                    <td>@item.Marca</td>
+                    <td>
+                        <a class="btn btn-warning" asp-controller="Veiculos" asp-action="Editar" asp-route-id="@item.Id">Editar</a>
+                    </td>
+                    <td>
+                        <form onsubmit="return confirm('Confirma?')" asp-controller="Veiculos" asp-action="Excluir" asp-route-id="@item.Id" method="post">
+                            <button type="submit" class="btn btn-danger">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dapper_estacionamento.Models
 {
-    [Table("vaiculos")]
+    [Table("veiculos")]
     public class Veiculo
     {
         [IgnoreInDapper]

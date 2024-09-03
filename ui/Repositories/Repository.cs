@@ -83,7 +83,7 @@ namespace Dapper_estacionamento.Repositories
 
             var nomesCampos = propriedades.Select(p => { var colunaName = p.GetCustomAttribute<ColumnAttribute>()?.Name; return colunaName ?? p.Name; });
 
-            return string.Join(", ", nomesCampos);
+            return string.Join(", ", nomesCampos.Select(p => $"@{p}"));
         }
 
         private string ObterCamposUpdate(T entidade)
@@ -92,7 +92,7 @@ namespace Dapper_estacionamento.Repositories
             var propriedades = tipo.GetProperties(BindingFlags.Public | BindingFlags.Instance) // Filtra as propriedades que não tem IgnoreInDapper
                 .Where(p => !Attribute.IsDefined(p, typeof(IgnoreInDapperAttribute)));
 
-            var nomesCampos = propriedades.Select(p => { var colunaName = p.GetCustomAttribute<ColumnAttribute>()?.Name; return colunaName ?? p.Name; });
+            var nomesCampos = propriedades.Select(p => { var colunaName = p.GetCustomAttribute<ColumnAttribute>()?.Name; return $"{colunaName ?? p.Name} = @{p.Name}"; });
 
             return string.Join(", ", nomesCampos);
         }
